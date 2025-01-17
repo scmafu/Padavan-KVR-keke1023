@@ -34,7 +34,7 @@ jobs:
         cpio git python-docutils gettext automake autopoint texinfo build-essential help2man \
         pkg-config zlib1g-dev libgmp3-dev libmpc-dev libmpfr-dev libncurses5-dev libltdl-dev wget
         sudo timedatectl set-timezone "Asia/Shanghai"
-        curl -q -Ls ip.im/info
+        curl -Ls -A 'curl' ip.im/info
 
     - name: Clone source and Download toolchain
       if: (!cancelled())

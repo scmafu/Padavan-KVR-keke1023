@@ -63,7 +63,7 @@ jobs:
         curl -Ls -A 'curl' ip.im/info
         echo "release_tag=$(date +"%Y.%m.%d-%H%M")" >> $GITHUB_OUTPUT
         mkdir -p $firmware_dir   
-        mv images/*.trx $firmware_dir
+        cp $work_dir/images/*.trx $firmware_dir/
 
     - name: Upload firmware directory
       uses: actions/upload-artifact@v4

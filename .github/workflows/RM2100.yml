@@ -62,7 +62,7 @@ jobs:
         sleep 10
         curl -Ls -A 'curl' ip.im/info
         echo "release_tag=$(date +"%Y.%m.%d-%H%M")" >> $GITHUB_OUTPUT
-        mkdir -p $firmware_dir   
+        mkdir -p $firmware_dir
         cp $work_dir/images/*.trx $firmware_dir/
 
     - name: Upload firmware directory
@@ -82,3 +82,25 @@ jobs:
        files: |
          ${{ env.firmware_dir }}/*.trx
        tag_name: ${{ steps.compile.outputs.release_tag }}
+
+    - name: Delete workflow
+      uses: Mattraks/delete-workflow-runs@main
+      with:
+        retain_days: 7
+        keep_minimum_runs: 4
+    
+    - name: Delete old rls
+      uses: dev-drprasad/delete-older-releases@master
+      if: github.event.inputs.upload_release == 'true' && !cancelled()
+      with:
+        keep_latest: 7
+        delete_tags: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Delete old firmware
+      uses: c-hive/gha-remove-artifacts@v1.4.0
+      if: steps.organizer.outputs.status == 'success'
+      with:
+        age: '1 day'
+        skip-recent: 5
